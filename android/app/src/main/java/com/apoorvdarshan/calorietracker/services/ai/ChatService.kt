@@ -390,6 +390,12 @@ class ChatService(
                     put("tools", toolsArr)
                     put("tool_choice", "auto")
                     put(OpenAICompatibleClient.tokenLimitParameter(provider, model), maxTokens)
+                    // GPT-6 models only allow tool calling on Chat Completions with reasoning off.
+                    if (model.trim().lowercase().substringAfterLast("/").startsWith("gpt-6") &&
+                        provider != AIProvider.OPENROUTER
+                    ) {
+                        put("reasoning_effort", "none")
+                    }
                     if (provider == AIProvider.OPENROUTER) {
                         reasoningEffort.requestOptions(compactRetry, exclude = false)?.let {
                             put("reasoning", JSONObject(it))
