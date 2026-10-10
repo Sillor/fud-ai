@@ -21,3 +21,5 @@ gradle/gradle-daemon-jvm.properties
 keystore.properties
 *.jks
 *.keystore
+# Fork's fixed debug key (not a release key) — committed on purpose.
+!fork-debug.keystore

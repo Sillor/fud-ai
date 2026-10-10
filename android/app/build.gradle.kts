@@ -90,6 +90,18 @@ android {
     }
 
     signingConfigs {
+        // Fork: sign debug builds with a fixed key committed to the repo, so every
+        // CI build can update the installed app in place (and keep its data)
+        // instead of each fresh runner generating a new random debug key.
+        val forkDebugKeystore = rootProject.file("fork-debug.keystore")
+        if (forkDebugKeystore.exists()) {
+            getByName("debug") {
+                storeFile = forkDebugKeystore
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
         if (keystoreProps.isNotEmpty()) {
             create("release") {
                 storeFile = file(keystoreProps.getProperty("storeFile"))
